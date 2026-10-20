@@ -3453,13 +3453,21 @@ public static class ModComp
             var nameWithoutExtension = extension.Length > 0
                 ? file.FileName[..^extension.Length]
                 : file.FileName;
+            // FileName 为 null 时按资源类型补一个默认扩展名，
+            // 避免快速下载保存出无扩展名、Minecraft 无法识别的文件（与手动另存的筛选器一致）
+            var defaultExtension = file.Type switch
+            {
+                CompType.Mod => ".jar",
+                CompType.ModPack => ".mrpack",
+                _ => ".zip"
+            };
             fileName = Config.Download.Comp.NameFormatV2 switch
             {
                 0 => $"【{chineseName}】{file.FileName}",
                 1 => $"[{chineseName}] {file.FileName}",
                 2 => $"{chineseName}-{file.FileName}",
-                3 => nameWithoutExtension is not null ? $"{nameWithoutExtension}-{chineseName}{extension}" : chineseName,
-                _ => file.FileName
+                3 => nameWithoutExtension is not null ? $"{nameWithoutExtension}-{chineseName}{extension}" : $"{chineseName}{defaultExtension}",
+                _ => file.FileName ?? $"{chineseName}{defaultExtension}"
             };
         }
 
