@@ -3437,9 +3437,21 @@ public static class ModComp
     public static string CompFileNameGet(CompProject proj, CompFile file)
     {
         string fileName;
+        // 源文件名可能为 null 或空（如翻译项目缺少原始文件名），此时需按类型补回退名与扩展名，
+        // 否则快速下载会保存出无扩展名、Minecraft 无法识别的文件
+        var hasSourceName = !string.IsNullOrWhiteSpace(file.FileName);
+        // 按资源类型给出默认扩展名，与手动另存对话框的筛选器保持一致
+        var defaultExtension = file.Type switch
+        {
+            CompType.Mod => ".jar",
+            CompType.ModPack => ".mrpack",
+            _ => ".zip"
+        };
         if ((proj.TranslatedName ?? "") == (proj.RawName ?? ""))
         {
-            fileName = file.FileName;
+            // 未翻译：直接使用源文件名；缺失时用工程名 + 类型默认扩展名回退
+            var fallbackBase = !string.IsNullOrWhiteSpace(proj.RawName) ? proj.RawName : "download";
+            fileName = hasSourceName ? file.FileName : $"{fallbackBase}{defaultExtension}";
         }
         else
         {
@@ -3448,26 +3460,21 @@ public static class ModComp
                 .Replace("*", "＊").Replace("?", "？").Replace("\"", "").Replace("： ", "：");
             // 格式 3 会把中文名追加在文件名之后，需先将扩展名剥离再放回末尾，
             // 否则会把 .jar 等扩展名夹到文件名中间（详见 Issue #3611）
-            // FileName 可能为 null（如翻译项目缺少原始文件名），此时按无扩展名处理，避免 NRE
-            var extension = Path.GetExtension(file.FileName) ?? "";
-            var nameWithoutExtension = extension.Length > 0
+            var extension = hasSourceName ? Path.GetExtension(file.FileName) : "";
+            var nameWithoutExtension = hasSourceName && !string.IsNullOrEmpty(extension)
                 ? file.FileName[..^extension.Length]
                 : file.FileName;
-            // FileName 为 null 时按资源类型补一个默认扩展名，
-            // 避免快速下载保存出无扩展名、Minecraft 无法识别的文件（与手动另存的筛选器一致）
-            var defaultExtension = file.Type switch
-            {
-                CompType.Mod => ".jar",
-                CompType.ModPack => ".mrpack",
-                _ => ".zip"
-            };
+            // 格式 0-2 为中文名前缀 + 源文件名；源文件名缺失时以类型默认扩展名补上，保证末尾仍有扩展名
+            var sourcePart = hasSourceName ? file.FileName : defaultExtension;
             fileName = Config.Download.Comp.NameFormatV2 switch
             {
-                0 => $"【{chineseName}】{file.FileName}",
-                1 => $"[{chineseName}] {file.FileName}",
-                2 => $"{chineseName}-{file.FileName}",
-                3 => nameWithoutExtension is not null ? $"{nameWithoutExtension}-{chineseName}{extension}" : $"{chineseName}{defaultExtension}",
-                _ => file.FileName ?? $"{chineseName}{defaultExtension}"
+                0 => $"【{chineseName}】{sourcePart}",
+                1 => $"[{chineseName}] {sourcePart}",
+                2 => $"{chineseName}-{sourcePart}",
+                3 => !string.IsNullOrWhiteSpace(nameWithoutExtension)
+                    ? $"{nameWithoutExtension}-{chineseName}{extension}"
+                    : $"{chineseName}{defaultExtension}",
+                _ => hasSourceName ? file.FileName : $"{chineseName}{defaultExtension}"
             };
         }
 
