@@ -3458,7 +3458,7 @@ public static class ModComp
                 0 => $"【{chineseName}】{file.FileName}",
                 1 => $"[{chineseName}] {file.FileName}",
                 2 => $"{chineseName}-{file.FileName}",
-                3 => $"{nameWithoutExtension}-{chineseName}{extension}",
+                3 => nameWithoutExtension is not null ? $"{nameWithoutExtension}-{chineseName}{extension}" : chineseName,
                 _ => file.FileName
             };
         }
