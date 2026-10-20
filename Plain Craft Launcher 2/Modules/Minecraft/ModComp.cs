@@ -3464,7 +3464,7 @@ public static class ModComp
         }
 
         if (file.Type == CompType.Mod)
-            fileName = fileName.Replace("~", "-"); // ~ 会导致 Mixin 加载失败
+            fileName = fileName?.Replace("~", "-"); // ~ 会导致 Mixin 加载失败
         return CompFileNameSanitize(fileName);
     }
 

@@ -388,8 +388,8 @@ public partial class PageDownloadCompDetail
                     var target = SystemDialogs.SelectSaveFile(Lang.Text("Download.Comp.Detail.SelectSaveLocation"),
                         fileName, Lang.Text("Download.Comp.Detail.ResourceFile.Filter", desc) + "|" +
                                   (file.Type == ModComp.CompType.Mod
-                                      ? file.FileName.EndsWith(".litemod") ? "*.litemod" : "*.jar"
-                                      : file.FileName.EndsWith(".mrpack")
+                                      ? file.FileName?.EndsWith(".litemod") == true ? "*.litemod" : "*.jar"
+                                      : file.FileName?.EndsWith(".mrpack") == true
                                           ? "*.mrpack"
                                           : "*.zip"),
                         defaultFolder);
