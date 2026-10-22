@@ -3437,10 +3437,7 @@ public static class ModComp
     public static string CompFileNameGet(CompProject proj, CompFile file)
     {
         string fileName;
-        // 源文件名可能为 null 或空（如翻译项目缺少原始文件名），此时需按类型补回退名与扩展名，
-        // 否则快速下载会保存出无扩展名、Minecraft 无法识别的文件
         var hasSourceName = !string.IsNullOrWhiteSpace(file.FileName);
-        // 按资源类型给出默认扩展名，与手动另存对话框的筛选器保持一致
         var defaultExtension = file.Type switch
         {
             CompType.Mod => ".jar",
@@ -3449,7 +3446,6 @@ public static class ModComp
         };
         if ((proj.TranslatedName ?? "") == (proj.RawName ?? ""))
         {
-            // 未翻译：直接使用源文件名；缺失时用工程名 + 类型默认扩展名回退
             var fallbackBase = !string.IsNullOrWhiteSpace(proj.RawName) ? proj.RawName : "download";
             fileName = hasSourceName ? file.FileName : $"{fallbackBase}{defaultExtension}";
         }
@@ -3458,13 +3454,10 @@ public static class ModComp
             var chineseName = proj.TranslatedName.BeforeFirst(" (").BeforeFirst(" - ").Replace(@"\", "＼")
                 .Replace("/", "／").Replace("|", "｜").Replace(":", "：").Replace("<", "＜").Replace(">", "＞")
                 .Replace("*", "＊").Replace("?", "？").Replace("\"", "").Replace("： ", "：");
-            // 格式 3 会把中文名追加在文件名之后，需先将扩展名剥离再放回末尾，
-            // 否则会把 .jar 等扩展名夹到文件名中间（详见 Issue #3611）
             var extension = hasSourceName ? Path.GetExtension(file.FileName) : "";
             var nameWithoutExtension = hasSourceName && !string.IsNullOrEmpty(extension)
                 ? file.FileName[..^extension.Length]
                 : file.FileName;
-            // 格式 0-2 为中文名前缀 + 源文件名；源文件名缺失时以类型默认扩展名补上，保证末尾仍有扩展名
             var sourcePart = hasSourceName ? file.FileName : defaultExtension;
             fileName = Config.Download.Comp.NameFormatV2 switch
             {
@@ -3479,7 +3472,7 @@ public static class ModComp
         }
 
         if (file.Type == CompType.Mod)
-            fileName = fileName?.Replace("~", "-"); // ~ 会导致 Mixin 加载失败
+            fileName = fileName?.Replace("~", "-");
         return CompFileNameSanitize(fileName);
     }
 
