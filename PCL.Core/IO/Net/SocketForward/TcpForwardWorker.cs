@@ -26,7 +26,7 @@ public sealed class TcpForwardWorker : IDisposable
 
     public IPEndPoint? LocalEndPoint { get; private set; }
 
-    private readonly TaskCompletionSource<IPEndPoint> _boundTcs =
+    private volatile TaskCompletionSource<IPEndPoint> _boundTcs =
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     public Task<IPEndPoint> BoundAddress => _boundTcs.Task;
@@ -41,6 +41,7 @@ public sealed class TcpForwardWorker : IDisposable
             if (_workerTask is { IsCompleted: false }) return;
 
             _cts = new CancellationTokenSource();
+            _boundTcs = new TaskCompletionSource<IPEndPoint>(TaskCreationOptions.RunContinuationsAsynchronously);
             _workerTask = _WorkerFunc();
             _workerTask.ContinueWith(x =>
             {
