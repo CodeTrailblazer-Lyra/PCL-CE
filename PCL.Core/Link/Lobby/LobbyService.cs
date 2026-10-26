@@ -38,6 +38,7 @@ public class LobbyService() : GeneralService("lobby", "LobbyService")
 
     private static bool _isGameWatcherRunnable = false;
     private static int _isLeaving;
+    private static int _joinVersion;
 
     /// <summary>
     /// Current lobby state.
@@ -367,6 +368,9 @@ public class LobbyService() : GeneralService("lobby", "LobbyService")
     {
         await _discoveringCts.CancelAsync().ConfigureAwait(false);
 
+        var joinToken = _lobbyCts.Token;
+        var joinVersion = Interlocked.Increment(ref _joinVersion);
+
         _SetState(LobbyState.Joining);
 
         LogWrapper.Info("LobbyService", $"Try to join lobby {lobbyCode}");
@@ -376,15 +380,15 @@ public class LobbyService() : GeneralService("lobby", "LobbyService")
             CurrentUserName = username;
             CurrentLobbyCode = lobbyCode;
 
-            var clientEntity = await _LobbyController.LaunchClientAsync(username, lobbyCode, _lobbyCts.Token).ConfigureAwait(false);
+            var clientEntity = await _LobbyController.LaunchClientAsync(username, lobbyCode, joinToken).ConfigureAwait(false);
 
             if (clientEntity is null)
             {
                 throw new InvalidOperationException(
                     Lang.Text("Link.Lobby.JoinFailed"));
             }
-            
-            if (_lobbyCts.IsCancellationRequested)
+
+            if (joinToken.IsCancellationRequested || Volatile.Read(ref _joinVersion) != joinVersion)
             {
                 throw new OperationCanceledException();
             }

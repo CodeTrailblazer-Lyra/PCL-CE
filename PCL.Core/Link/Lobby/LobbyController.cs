@@ -59,6 +59,8 @@ public sealed class LobbyController
             return null;
         }
 
+        TcpForwardWorker? forward = null;
+        BroadcastLocal? broadcast = null;
         try
         {
             var scfEntity = await ScaffoldingFactory
@@ -95,14 +97,25 @@ public sealed class LobbyController
                 : Lang.Text("Link.Lobby.MotdDesc", hostname);
 
             var tcpPortForForward = NetworkHelper.NewTcpPort();
-            McForward = new TcpForwardBuilder()
+            forward = new TcpForwardBuilder()
                 .BindLocal((ushort)tcpPortForForward)
                 .SetRemote(IPAddress.Loopback, (ushort)localPort)
                 .Build();
-            McForward.Start();
-            McBroadcast = new BroadcastLocal(Lang.Text("Link.Lobby.MotdFormat", desc), tcpPortForForward);
-            McBroadcast.Start();
-            _ = await McForward.BoundAddress.WaitAsync(ct).ConfigureAwait(false);
+            forward.Start();
+            broadcast = new BroadcastLocal(Lang.Text("Link.Lobby.MotdFormat", desc), tcpPortForForward);
+            broadcast.Start();
+            McForward = forward;
+            McBroadcast = broadcast;
+            _ = await forward.BoundAddress.WaitAsync(ct).ConfigureAwait(false);
+            
+            ct.ThrowIfCancellationRequested();
+
+            if (!ReferenceEquals(ScfClientEntity, scfEntity))
+            {
+                await scfEntity.EasyTier.StopAsync().ConfigureAwait(false);
+                await scfEntity.Client.DisposeAsync().ConfigureAwait(false);
+                throw new OperationCanceledException(ct);
+            }
 
             return scfEntity;
         }
@@ -127,10 +140,10 @@ public sealed class LobbyController
         }
         catch (OperationCanceledException)
         {
-            McForward?.Stop();
-            McForward = null;
-            McBroadcast?.Stop();
-            McBroadcast = null;
+            forward?.Stop();
+            if (ReferenceEquals(McForward, forward)) McForward = null;
+            broadcast?.Stop();
+            if (ReferenceEquals(McBroadcast, broadcast)) McBroadcast = null;
             throw;
         }
         catch (Exception e)
