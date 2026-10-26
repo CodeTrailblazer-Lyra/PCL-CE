@@ -74,7 +74,8 @@ public sealed class LobbyController
 
             while (scfEntity.Client.PlayerList is null)
             {
-                await Task.Delay(800).ConfigureAwait(false);
+                ct.ThrowIfCancellationRequested();
+                await Task.Delay(800, ct).ConfigureAwait(false);
             }
 
             foreach (var profile in scfEntity.Client.PlayerList)
