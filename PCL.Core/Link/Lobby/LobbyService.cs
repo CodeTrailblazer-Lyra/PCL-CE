@@ -383,6 +383,11 @@ public class LobbyService() : GeneralService("lobby", "LobbyService")
                 throw new InvalidOperationException(
                     Lang.Text("Link.Lobby.JoinFailed"));
             }
+            
+            if (_lobbyCts.IsCancellationRequested)
+            {
+                throw new OperationCanceledException();
+            }
 
             clientEntity.Client.Heartbeat += _ClientOnHeartbeat;
             clientEntity.Client.ServerShuttedDown += _ClientOnServerShutDown;
