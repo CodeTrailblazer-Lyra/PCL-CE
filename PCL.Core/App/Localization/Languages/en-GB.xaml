@@ -1062,6 +1062,7 @@
     <sys:String x:Key="Instance.Resource.Enable">Enable</sys:String>
     <sys:String x:Key="Instance.Resource.OpenConfigFolder">Open config folder</sys:String>
     <sys:String x:Key="Instance.Resource.ConfigFolder.NotExists">Mod {0} has not generated a config folder, opened config directory</sys:String>
+    <sys:String x:Key="Instance.Resource.ConfigFolder.NoModId">Cannot identify mod ID for {0}, unable to open config folder</sys:String>
     <sys:String x:Key="Instance.Resource.Error.OperationFailed">A resource management operation failed. See the details below.</sys:String>
     <sys:String x:Key="Instance.Resource.Export.FilesFilter">Text file (*.txt)|*.txt|CSV file (*.csv)|*.csv</sys:String>
     <sys:String x:Key="Instance.Resource.Export.Mode.Csv">CSV format</sys:String>
