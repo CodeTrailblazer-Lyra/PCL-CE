@@ -1099,6 +1099,8 @@
     <sys:String x:Key="Instance.Resource.EmptyFolder.Description">你可以从已经下载好的文件安装资源</sys:String>
     <sys:String x:Key="Instance.Resource.EmptyFolder.Title">该文件夹为空</sys:String>
     <sys:String x:Key="Instance.Resource.Enable">启用</sys:String>
+    <sys:String x:Key="Instance.Resource.OpenConfigFolder">打开配置文件夹</sys:String>
+    <sys:String x:Key="Instance.Resource.ConfigFolder.NotExists">模组 {0} 尚未生成配置文件夹，已打开 config 目录</sys:String>
     <sys:String x:Key="Instance.Resource.Error.OperationFailed">资源管理操作失败。请查看错误详情。</sys:String>
     <sys:String x:Key="Instance.Resource.Export.FilesFilter">文本文件(*.txt)|*.txt|CSV 文件(*.csv)|*.csv</sys:String>
     <sys:String x:Key="Instance.Resource.Export.Mode.Csv">CSV 格式</sys:String>
