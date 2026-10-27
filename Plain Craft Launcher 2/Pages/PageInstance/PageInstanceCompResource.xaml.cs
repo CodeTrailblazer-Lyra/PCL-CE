@@ -2708,6 +2708,13 @@ public partial class PageInstanceCompResource : IRefreshable, IPageView
             {
                 var configDir = configFolderBase + @"\";
                 Directory.CreateDirectory(configDir);
+                
+                if (Directory.Exists(configFolder))
+                {
+                    ModBase.OpenExplorer(configFolder);
+                    return;
+                }
+                
                 var allFiles = Directory.GetFiles(configDir, modId + "*");
                 var configFiles = allFiles.Where(f =>
                 {
