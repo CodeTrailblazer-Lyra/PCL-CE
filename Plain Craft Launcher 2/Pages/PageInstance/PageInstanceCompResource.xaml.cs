@@ -608,12 +608,6 @@ public partial class PageInstanceCompResource : IRefreshable, IPageView
         }
         else
         {
-            var btnSetting = new MyIconButton { LogoScale = 1d, SvgIcon = "lucide/settings", Tag = sender };
-            btnSetting.ToolTip = Lang.Text("Instance.Resource.OpenConfigFolder");
-            ToolTipService.SetPlacement(btnSetting, PlacementMode.Center);
-            ToolTipService.SetVerticalOffset(btnSetting, 30d);
-            ToolTipService.SetHorizontalOffset(btnSetting, 2d);
-            btnSetting.Click += (ss, ee) => Setting_Click((MyIconButton)ss, ee);
             var btnED = new MyIconButton
             {
                 LogoScale = 1d,
@@ -627,7 +621,21 @@ public partial class PageInstanceCompResource : IRefreshable, IPageView
             ToolTipService.SetVerticalOffset(btnED, 30d);
             ToolTipService.SetHorizontalOffset(btnED, 2d);
             btnED.Click += (ss, ee) => ED_Click((MyIconButton)ss, ee);
-            sender.Buttons = new[] { btnCont, btnOpen, btnSetting, btnED, btnDelete };
+            
+            if (!sender.Entry.IsFolder)
+            {
+                var btnSetting = new MyIconButton { LogoScale = 1d, SvgIcon = "lucide/settings", Tag = sender };
+                btnSetting.ToolTip = Lang.Text("Instance.Resource.OpenConfigFolder");
+                ToolTipService.SetPlacement(btnSetting, PlacementMode.Center);
+                ToolTipService.SetVerticalOffset(btnSetting, 30d);
+                ToolTipService.SetHorizontalOffset(btnSetting, 2d);
+                btnSetting.Click += (ss, ee) => Setting_Click((MyIconButton)ss, ee);
+                sender.Buttons = new[] { btnCont, btnOpen, btnSetting, btnED, btnDelete };
+            }
+            else
+            {
+                sender.Buttons = new[] { btnCont, btnOpen, btnED, btnDelete };
+            }
         }
     }
 
