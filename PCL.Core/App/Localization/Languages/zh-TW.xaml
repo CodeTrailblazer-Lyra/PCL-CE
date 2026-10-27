@@ -1060,7 +1060,7 @@
     <sys:String x:Key="Instance.Resource.EmptyFolder.Description">你可以從已經下載好的檔案安裝資源</sys:String>
     <sys:String x:Key="Instance.Resource.EmptyFolder.Title">該資料夾為空</sys:String>
     <sys:String x:Key="Instance.Resource.Enable">啟用</sys:String>
-    <sys:String x:Key="Instance.Resource.OpenConfigFolder">打開設定資料夾</sys:String>
+    <sys:String x:Key="Instance.Resource.OpenConfigFolder">設定</sys:String>
     <sys:String x:Key="Instance.Resource.ConfigFolder.NotExists">模組 {0} 尚未生成設定資料夾，已打開 config 目錄</sys:String>
     <sys:String x:Key="Instance.Resource.ConfigFolder.NoModId">無法識別模組 {0} 的 ID，無法打開設定資料夾</sys:String>
     <sys:String x:Key="Instance.Resource.Error.OperationFailed">資源管理操作失敗。請檢視錯誤詳情。</sys:String>

@@ -1099,7 +1099,7 @@
     <sys:String x:Key="Instance.Resource.EmptyFolder.Description">You can install resources from previously downloaded files</sys:String>
     <sys:String x:Key="Instance.Resource.EmptyFolder.Title">This folder is empty</sys:String>
     <sys:String x:Key="Instance.Resource.Enable">Enable</sys:String>
-    <sys:String x:Key="Instance.Resource.OpenConfigFolder">Open config folder</sys:String>
+    <sys:String x:Key="Instance.Resource.OpenConfigFolder">Config</sys:String>
     <sys:String x:Key="Instance.Resource.ConfigFolder.NotExists">Mod {0} has not generated a config folder, opened config directory</sys:String>
     <sys:String x:Key="Instance.Resource.ConfigFolder.NoModId">Cannot identify mod ID for {0}, unable to open config folder</sys:String>
     <sys:String x:Key="Instance.Resource.Error.OperationFailed">A resource management operation failed. See the details below.</sys:String>
