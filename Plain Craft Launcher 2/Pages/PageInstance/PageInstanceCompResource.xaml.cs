@@ -2700,7 +2700,6 @@ public partial class PageInstanceCompResource : IRefreshable, IPageView
             {
                 var configDir = configFolderBase + @"\";
                 Directory.CreateDirectory(configDir);
-
                 var allFiles = Directory.GetFiles(configDir, modId + "*");
                 var configFiles = allFiles.Where(f =>
                 {
