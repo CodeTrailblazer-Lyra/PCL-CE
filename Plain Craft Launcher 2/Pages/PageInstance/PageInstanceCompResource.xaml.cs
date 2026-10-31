@@ -2671,10 +2671,7 @@ public partial class PageInstanceCompResource : IRefreshable, IPageView
                 modId.Contains('\\') ||
                 modId.Contains('/'))
             {
-                HintService.Hint(
-                    Lang.Text("Instance.Resource.ConfigFolder.NoModId", listItem.Entry.Name),
-                    HintType.Info,
-                    false);
+                HintService.Show(Hints.Info(Lang.Text("Instance.Resource.ConfigFolder.NoModId", listItem.Entry.Name)));
                 return;
             }
 
@@ -2727,18 +2724,12 @@ public partial class PageInstanceCompResource : IRefreshable, IPageView
 
                 if (configFiles.Length > 0)
                 {
-                    HintService.Hint(
-                        Lang.Text("Instance.Resource.ConfigFolder.FileSelected", listItem.Entry.Name ?? modId),
-                        HintType.Info,
-                        false);
+                    HintService.Show(Hints.Info(Lang.Text("Instance.Resource.ConfigFolder.FileSelected", listItem.Entry.Name ?? modId)));
                     Common.OpenExplorer(configFiles[0]);
                 }
                 else
                 {
-                    HintService.Hint(
-                        Lang.Text("Instance.Resource.ConfigFolder.NotExists", listItem.Entry.Name ?? modId),
-                        HintType.Info,
-                        false);
+                    HintService.Show(Hints.Info(Lang.Text("Instance.Resource.ConfigFolder.NotExists", listItem.Entry.Name ?? modId)));
                     Common.OpenExplorer(configDir);
                 }
             }
