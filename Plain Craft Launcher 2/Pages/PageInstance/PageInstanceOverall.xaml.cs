@@ -487,8 +487,6 @@ public partial class PageInstanceOverall : IPageView
         PageInstanceOverallViewModel.OpenVersionFolder(version);
     }
 
-    }
-
     #endregion
 
     #region 卡片：管理
